@@ -1,0 +1,19 @@
+﻿@import "tailwindcss";
+@import "@heroui/styles";
+
+/* 思源黑体 / Noto Sans SC - Google 开源中文字体，覆盖简体中文（SC）字形 / Open-source Chinese font providing SC glyphs */
+@import "@fontsource/noto-sans-sc/index.css";
+
+/* Alimama ShuHeiTi / 阿里妈妈数黑体 - 专用于价格和数字 / Dedicated price & number font */
+@font-face {
+  font-family: "AlimamaShuHeiTi";
+  src: url("./assets/fonts/AlimamaShuHeiTi/AlimamaShuHeiTi-Bold.woff2") format("woff2"),
+       url("./assets/fonts/AlimamaShuHeiTi/AlimamaShuHeiTi-Bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+html, body {
+  overflow: hidden;
+}

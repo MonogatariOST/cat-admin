@@ -1,0 +1,66 @@
+/**
+ * Global base styles / 全局基础样式
+ * Minimal overrides — most styling is handled by Tailwind + HeroUI.
+ * / 最小覆盖样式 — 大部分样式由 Tailwind + HeroUI 处理
+ */
+
+/* Body reset / 页面重置 */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Full-height root for admin layout / 管理面板全高根容器 */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar styling - Firefox / 滚动条样式 - Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) transparent;
+}
+
+/* Scrollbar styling - WebKit (Chrome, Edge, Safari) / 滚动条样式 - WebKit 内核 */
+*::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: transparent;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Hide scrollbar buttons by setting zero dimensions / 将滚动条按钮尺寸归零以隐藏 */
+*::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--muted);
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--foreground);
+}
+
+/* Table scroll container - thicker thumb / 表格滚动容器 */
+[data-slot="table-scroll-container"]::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-slot="table-scroll-container"]::-webkit-scrollbar-thumb {
+  border-width: 1.5px;
+}
+
+[data-slot="table-scroll-container"]::-webkit-scrollbar-button {
+  height: 0;
+  width: 0;
+}
