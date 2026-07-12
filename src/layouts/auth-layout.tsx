@@ -4,7 +4,7 @@
  * / 登录/注册页面的居中布局，无侧边栏和导航
  */
 
-import { Outlet } from 'react-router';
+import { Outlet } from "react-router";
 
 /**
  * AuthLayout - Minimal centered layout for authentication pages / 认证页面简约居中布局
@@ -16,9 +16,9 @@ const AuthLayout = () => {
         {/* Logo / 品牌标识 */}
         <div className="mb-8 text-center">
           <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-accent text-accent-foreground text-xl font-bold">
-            H
+            C
           </div>
-          <h1 className="text-xl font-semibold text-foreground">HeroAdmin</h1>
+          <h1 className="text-xl font-semibold text-foreground">CatAdmin</h1>
         </div>
 
         {/* Auth content slot / 认证内容插槽 */}

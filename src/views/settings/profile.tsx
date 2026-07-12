@@ -14,7 +14,7 @@ import { settingsApi } from "../../api/settings";
 import { BuiPage } from "../../components/baseui"
 import { useSetPageTitle } from "../../stores"
 import {
-  Card, Form, TextField, Label, InputGroup, Button, FieldError,
+  Card, Form, TextField, Label, InputGroup, Button, FieldError, Select, ListBox,
 } from "@heroui/react";
 
 /**
@@ -35,7 +35,14 @@ const SettingsPage = () => {
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordValue, setPasswordValue] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+ const [confirmPassword, setConfirmPassword] = useState("");
+  const [isInterfaceLoading, setIsInterfaceLoading] = useState(false);
+
+  /** Handle interface preferences save / 保存界面偏好设置 */
+  const handleInterfaceSave = () => {
+    setIsInterfaceLoading(true);
+    setTimeout(() => setIsInterfaceLoading(false), 500);
+  };
 
   /**
    * Handle profile form submission / 处理个人资料表单提交
@@ -101,11 +108,16 @@ const SettingsPage = () => {
 
   return (
     <BuiPage >
-      <div className="flex flex-col gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {/* Profile section / 个人资料 */}
         <Card className="p-6">
           <Card.Content>
-            <h3 className="mb-4 text-base font-semibold text-foreground">个人信息</h3>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-foreground">个人信息</h3>
+              <Button type="submit" form="profile-form" isDisabled={isProfileLoading} size="sm">
+                {isProfileLoading ? "保存中..." : "保存修改"}
+              </Button>
+            </div>
 
             {profileError && (
               <div className="mb-4 rounded-lg bg-danger-50 p-3 text-sm text-danger">
@@ -119,7 +131,7 @@ const SettingsPage = () => {
               </div>
             )}
 
-            <Form onSubmit={handleProfileSubmit} className="flex flex-col gap-4">
+            <Form id="profile-form" onSubmit={handleProfileSubmit} className="flex flex-col gap-4">
               {/* Display name / 显示名称 */}
               <TextField
                 name="displayName"
@@ -145,13 +157,6 @@ const SettingsPage = () => {
                 <FieldError />
               </TextField>
 
-              <Button
-                type="submit"
-                isDisabled={isProfileLoading}
-                className="self-start"
-              >
-                {isProfileLoading ? "保存中..." : "保存修改"}
-              </Button>
             </Form>
           </Card.Content>
         </Card>
@@ -159,7 +164,12 @@ const SettingsPage = () => {
         {/* Password section / 修改密码 */}
         <Card className="p-6">
           <Card.Content>
-            <h3 className="mb-4 text-base font-semibold text-foreground">修改密码</h3>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-foreground">修改密码</h3>
+              <Button type="submit" form="password-form" isDisabled={isPasswordLoading} size="sm">
+                {isPasswordLoading ? "修改中..." : "修改密码"}
+              </Button>
+            </div>
 
             {passwordError && (
               <div className="mb-4 rounded-lg bg-danger-50 p-3 text-sm text-danger">
@@ -173,7 +183,7 @@ const SettingsPage = () => {
               </div>
             )}
 
-            <Form onSubmit={handlePasswordSubmit} className="flex flex-col gap-4">
+            <Form id="password-form" onSubmit={handlePasswordSubmit} className="flex flex-col gap-4">
               {/* Current password / 当前密码 */}
               <TextField isRequired name="currentPassword" minLength={6}>
                 <Label>当前密码</Label>
@@ -210,16 +220,76 @@ const SettingsPage = () => {
                 <FieldError />
               </TextField>
 
-              <Button
-                type="submit"
-                isDisabled={isPasswordLoading}
-                className="self-start"
-              >
-                {isPasswordLoading ? "修改中..." : "修改密码"}
-              </Button>
             </Form>
           </Card.Content>
         </Card>
+
+        {/* Notification Preferences / 通知偏好 */}
+        <Card className="p-6">
+          <Card.Content>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-foreground">通知偏好</h3>
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between rounded-lg bg-surface-secondary px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">邮件通知</p>
+                  <p className="text-xs text-foreground-400">接收订单状态变更和系统公告邮件</p>
+                </div>
+                <span className="rounded-full bg-primary px-3 py-0.5 text-xs font-medium text-primary-foreground">已开启</span>
+              </div>
+              <div className="flex items-center justify-between rounded-lg bg-surface-secondary px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">推送通知</p>
+                  <p className="text-xs text-foreground-400">接收浏览器桌面推送通知</p>
+                </div>
+                <span className="rounded-full bg-surface-tertiary px-3 py-0.5 text-xs font-medium text-foreground-500">已关闭</span>
+              </div>
+            </div>
+          </Card.Content>
+        </Card>
+ 
+        {/* Interface Preferences / 界面偏好 */}
+        <Card className="p-6">
+          <Card.Content>
+            <div className="mb-4 flex items-center justify-between">
+             <h3 className="text-base font-semibold text-foreground">界面偏好</h3>
+              <Button isDisabled={isInterfaceLoading} size="sm" onPress={handleInterfaceSave}>
+                {isInterfaceLoading ? "保存中..." : "保存设置"}
+              </Button>
+            </div>
+            <div className="flex flex-col gap-4">
+              <Select aria-label="语言" placeholder="选择语言">
+                <Label>语言</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    <ListBox.Item key="zh-CN" textValue="简体中文">简体中文<ListBox.ItemIndicator /></ListBox.Item>
+                    <ListBox.Item key="en-US" textValue="English">English<ListBox.ItemIndicator /></ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+              <Select aria-label="主题" placeholder="选择主题">
+                <Label>主题</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    <ListBox.Item key="system" textValue="跟随系统">跟随系统<ListBox.ItemIndicator /></ListBox.Item>
+                    <ListBox.Item key="light" textValue="浅色">浅色<ListBox.ItemIndicator /></ListBox.Item>
+                    <ListBox.Item key="dark" textValue="深色">深色<ListBox.ItemIndicator /></ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+            </div>
+          </Card.Content>
+        </Card>
+
       </div>
     </BuiPage>
   );

@@ -40,7 +40,7 @@ export const SuiSteps = ({
             const isActive = i === current;
             const isCompleted = i < current;
             return (
-              <div key={i} className="flex flex-col items-center z-10">
+              <div key={i} className="relative flex flex-col items-center z-10">
                 <div className={
                   "flex size-8 items-center justify-center rounded-full text-sm font-semibold transition-colors " +
                   (isCompleted ? "bg-accent text-accent-foreground" :
@@ -56,7 +56,7 @@ export const SuiSteps = ({
           })}
         </div>
         {/* Progress bar */}
-        <div className="absolute left-4 right-4 top-4 -z-0 h-0.5 -translate-y-1/2 bg-surface-tertiary">
+        <div className="absolute left-8 right-8 top-4 -z-0 h-0.5 -translate-y-1/2 bg-surface-tertiary">
           <div className="h-full bg-accent transition-all duration-300" style={{ width: progress + "%" }} />
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
-import { BuiPage, BuiTable } from "../../components/baseui";
+import { BuiPage, BuiTable, BuiToolbar } from "../../components/baseui";
 import { useSetPageTitle } from "../../stores"
 import type { Key } from "@heroui/react"
 import type { BuiTableColumn } from "../../components/baseui";
@@ -48,7 +48,7 @@ const RolesList = () => {
   const handleSearchChange = (v: string) => { setSearchQuery(v); setPage(1); };
 
 
-  const footer = <Pagination size="sm"><Pagination.Summary>{"第 " + pageStart + "-" + pageEnd + " 条，共 " + filtered.length + " 条"}</Pagination.Summary><Pagination.Content><Pagination.Item><Pagination.Previous isDisabled={page === 1} onPress={() => setPage(Math.max(1, page - 1))}><Pagination.PreviousIcon /> Prev</Pagination.Previous></Pagination.Item>{Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => <Pagination.Item key={p}><Pagination.Link isActive={p === page} onPress={() => setPage(p)}>{p}</Pagination.Link></Pagination.Item>)}<Pagination.Item><Pagination.Next isDisabled={page === totalPages} onPress={() => setPage(Math.min(totalPages, page + 1))}>Next <Pagination.NextIcon /></Pagination.Next></Pagination.Item></Pagination.Content></Pagination>;
+  const footer = <Pagination size="sm"><Pagination.Summary>{"第 " + pageStart + "-" + pageEnd + " 条，共 " + filtered.length + " 条"}</Pagination.Summary><Pagination.Content><Pagination.Item><Pagination.Previous isDisabled={page === 1} onPress={() => setPage(Math.max(1, page - 1))}>上一页</Pagination.Previous></Pagination.Item>{Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => <Pagination.Item key={p}><Pagination.Link isActive={p === page} onPress={() => setPage(p)}>{p}</Pagination.Link></Pagination.Item>)}<Pagination.Item><Pagination.Next isDisabled={page === totalPages} onPress={() => setPage(Math.min(totalPages, page + 1))}>下一页</Pagination.Next></Pagination.Item></Pagination.Content></Pagination>;
 
   const columns: BuiTableColumn<typeof paginated[0]>[] = [{ key: "name", title: "角色名称", isRowHeader: true },{ key: "description", title: "描述" },{ key: "userCount", title: "用户数", render: (r) => <Chip size="sm" variant="soft" color={r.userCount > 0 ? "accent" : "default"}>{r.userCount + " 人"}</Chip> },{ key: "permissions", title: "权限", render: (r) => <div className="flex flex-wrap gap-1">{r.permissions.slice(0, 3).map((p) => <Chip key={p} size="sm" variant="soft">{p}</Chip>)}{r.permissions.length > 3 && <Chip size="sm" variant="soft" color="accent">{"+" + (r.permissions.length - 3)}</Chip>}</div> },{ key: "actions", title: "操作", render: (r) => <><Button size="sm" variant="ghost" isIconOnly aria-label={"编辑" + r.name} onPress={() => openEdit(r)}><Pencil size={16} /></Button><Button size="sm" variant="ghost" isIconOnly aria-label={"删除" + r.name} onPress={() => confirmDelete(r)}><Trash2 size={16} className="text-danger" /></Button></> }];
 
@@ -71,20 +71,16 @@ const RolesList = () => {
           </Card>
         ))}
       </div>
-      <div className="mb-4 flex shrink-0 flex-wrap items-end justify-between gap-3">
-    <div className="flex items-end gap-3">
-    <Button size="sm" variant="secondary" onPress={() => openCreate()} ><Plus size={16} />新建角色</Button>
-    </div>
-    <div className="flex items-end gap-3">
-    <SearchField aria-label="搜索角色" value={searchQuery} onChange={handleSearchChange}>
+      <BuiToolbar
+        left={<Button size="sm" variant="secondary" onPress={() => openCreate()} ><Plus size={16} />新建角色</Button>}
+        right={<SearchField aria-label="搜索角色" value={searchQuery} onChange={handleSearchChange}>
           <SearchField.Group>
             <SearchField.SearchIcon />
             <SearchField.Input className="w-60" placeholder="搜索角色名称或描述..." />
             <SearchField.ClearButton />
           </SearchField.Group>
-        </SearchField>
-    </div>
-      </div>
+        </SearchField>}
+      />
       <BuiTable
         data={paginated}
         columns={columns}

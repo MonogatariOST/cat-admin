@@ -6,7 +6,10 @@
     <script>
       (function () {
         var theme = localStorage.getItem("hero-admin-theme");
-        if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+        if (
+          theme === "dark" ||
+          (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
           document.documentElement.classList.add("dark");
           document.documentElement.setAttribute("data-theme", "dark");
         } else {
@@ -16,7 +19,7 @@
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>hero-admin</title>
+    <title>cat-admin</title>
   </head>
   <body>
     <div id="root"></div>

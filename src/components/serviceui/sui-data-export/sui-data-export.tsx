@@ -4,7 +4,7 @@
  * / 基于表格数据生成可下载的 CSV 文件
  */
 import { Download } from "lucide-react";
-import { Button, Dropdown } from "@heroui/react";
+import { Dropdown } from "@heroui/react";
 import type { Key } from "@heroui/react";
 
 export interface SuiDataExportProps {
@@ -12,8 +12,6 @@ export interface SuiDataExportProps {
   rows: string[][];
   filename?: string;
   label?: string;
-  variant?: "ghost";
-  size?: "sm" | "md";
 }
 
 const exportCSV = (headers: string[], rows: string[][], filename: string) => {
@@ -35,10 +33,12 @@ const exportJSON = (headers: string[], rows: string[][], filename: string) => {
   URL.revokeObjectURL(url);
 };
 
-export const SuiDataExport = ({ headers, rows, filename = "export", label = "导出", variant = "ghost", size = "sm" }: SuiDataExportProps) => (
+export const SuiDataExport = ({ headers, rows, filename = "export", label = "导出" }: SuiDataExportProps) => (
   <Dropdown>
     <Dropdown.Trigger>
-      <Button variant={variant} size={size}><Download size={16} />{label}</Button>
+      <span className="inline-flex cursor-pointer items-center gap-1 rounded-lg bg-transparent px-2 py-1 text-sm text-foreground-500 hover:bg-surface-secondary hover:text-foreground transition-colors" role="button" tabIndex={0}>
+        <Download size={16} />{label}
+      </span>
     </Dropdown.Trigger>
     <Dropdown.Popover placement="bottom end">
       <Dropdown.Menu aria-label="导出格式" onAction={(key: Key) => {

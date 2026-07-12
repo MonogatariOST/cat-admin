@@ -1,20 +1,21 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import type { Key } from "@heroui/react";
 import { BuiPage, BuiTable } from "../../components/baseui"
 import { useSetPageTitle } from "../../stores"
 import type { BuiTableColumn } from "../../components/baseui";
+import type { Key } from "@heroui/react";
 import {
-  Card, SearchField, Select, Label, ListBox
+  Button, Card, SearchField, Select, Label, ListBox, Modal, Input, TextField
 } from "@heroui/react";
+import { Plus } from "lucide-react";
 import { permissionsApi } from "../../api/permissions";
 
 const PermissionsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [moduleFilter, setModuleFilter] = useState<Key | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
     useSetPageTitle("权限管理", "管理系统中所有权限项");
-  const [selectedKeys, setSelectedKeys] = useState<Set<Key>>(new Set());
   
   const { permissions, modules } = useMemo(() => {
     const all = permissionsApi.getAllSync();
@@ -46,6 +47,9 @@ const PermissionsList = () => {
 
   const columns: BuiTableColumn<typeof filtered[0]>[] = [{ key: "id", title: "权限标识", render: (p) => <code className="rounded bg-surface-tertiary px-1.5 py-0.5 text-xs text-foreground-500 font-mono">{p.id}</code> },{ key: "name", title: "权限名称", isRowHeader: true },{ key: "description", title: "描述" }];
 
+  const openCreate = () => setModalOpen(true);
+  const handleCreate = () => setModalOpen(false);
+
   return (
     <BuiPage
       className="h-full"
@@ -66,6 +70,7 @@ const PermissionsList = () => {
         ))}
       </div>
       <div className="mb-4 flex shrink-0 flex-wrap items-end gap-3">
+    <Button size="sm" variant="secondary" onPress={openCreate}><Plus size={16} />新建权限</Button>
         <SearchField aria-label="搜索权限" value={searchQuery} onChange={(v: string) => { setSearchQuery(v); setModuleFilter(null); }}>
           <SearchField.Group>
             <SearchField.SearchIcon />
@@ -89,14 +94,15 @@ const PermissionsList = () => {
         columns={columns}
         getRowId={(p) => p.id}
         emptyContent="该模块下无匹配权限"
-        selectionMode="multiple"
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
       />
             </Card.Content>
           </Card>
         ))}
       </div>
+          <Modal.Backdrop isOpen={modalOpen} onOpenChange={setModalOpen}><Modal.Container placement="auto"><Modal.Dialog aria-label="新建权限" className="sm:max-w-lg"><Modal.CloseTrigger /><Modal.Header><Modal.Heading>新建权限</Modal.Heading></Modal.Header><Modal.Body><div className="flex flex-col gap-4">
+              <TextField className="w-full"><Label>名称</Label><Input placeholder="输入名称" /></TextField>
+              <TextField className="w-full"><Label>描述</Label><Input placeholder="输入描述" /></TextField>
+      </div></Modal.Body><Modal.Footer><Button slot="close" variant="secondary">取消</Button><Button onPress={handleCreate}>保存</Button></Modal.Footer></Modal.Dialog></Modal.Container></Modal.Backdrop>
     </BuiPage>
   );
 };
